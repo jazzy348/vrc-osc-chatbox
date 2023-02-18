@@ -1,0 +1,33 @@
+<head>
+    <title>OSC Message Sender</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+</head>
+
+<body style="margin:auto;width:50%;padding:10px;text-align:center;">
+    <form id="sendMsg" action="/sendMsg" method="post">
+        <input type="text" name="msg" id="msg" placeholder="message"/><br><br>
+        <input type="submit" value="send"/>
+    </form>
+    <br>
+    <div id="respMsg"></div>
+    <script>
+        $("#sendMsg").submit(function(event) {
+            event.preventDefault();
+            const $form = $(this),
+            url = $form.attr('action');
+            const posting = $.post(url, {
+                msg: $('#msg').val()
+            })
+            posting.done(function(data) {
+                if (data.status != "ok") {
+                    document.getElementById('respMsg').innerHTML=`<font color="red">Something went wrong, check app for details.</font>`;
+                } else {
+                    document.getElementById('respMsg').innerHTML=`<font color="green">Message sent</font>`;
+                }
+            })
+            posting.fail(function() {
+                document.getElementById('respMsg').innerHTML=`<font color="red">Something went wrong, check app for details.</font>`;
+            });
+        })
+    </script>
+</body>

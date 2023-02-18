@@ -8,9 +8,10 @@
         <input type="text" name="msg" id="msg" placeholder="message"/><br><br>
         <input type="submit" value="send"/>
     </form>
-    <br>
-    <div id="respMsg"></div>
+    <div id="respMsg"></div><br>
+    <div id="msgLog"></div>
     <script>
+        let sentMsgs=[];
         $("#sendMsg").submit(function(event) {
             event.preventDefault();
             const $form = $(this),
@@ -22,6 +23,19 @@
                 if (data.status != "ok") {
                     document.getElementById('respMsg').innerHTML=`<font color="red">Something went wrong, check app for details.</font>`;
                 } else {
+                    sentMessage = $('#msg').val()
+                    if (sentMsgs.length < 5) {
+                        sentMsgs.push(sentMessage)
+                    } else {
+                        console.log("array length longer than 5 " + sentMsgs.length)
+                        sentMsgs.shift();
+                        sentMsgs.push(sentMessage)
+                    }
+                    let oldLog = "";
+                    sentMsgs.slice().reverse().forEach(l => {
+                        oldLog = oldLog + l + "<br>";
+                    })
+                    document.getElementById('msgLog').innerHTML=oldLog;
                     document.getElementById('respMsg').innerHTML=`<font color="green">Message sent</font>`;
                 }
             })
